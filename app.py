@@ -1,12 +1,30 @@
 from flask import Flask
 from flask_restful import Resource, Api
+from flask_mongoengine import MongoEngine
 
 app = Flask(__name__)
 api = Api(app)
+db = MongoEngine(app)
+
+app.config['MONGODB_SETTING'] = {
+    "db": "users",
+    "host": "mongodb",
+    "port": 27017,
+    "user": "admin",
+    "password": "admin"  # Inserir credenciais do MongoDB aqui
+}
+
+class UserModel(db.Document):
+    cpf = db.StringField(required=True, unique=True)
+    email = db.EmailField(required=True)
+    first_name = db.StringField(required=True, max_length=50)
+    last_name = db.Field(required=True, max_length=50)
+    birth_date = db.DateTimeField(required=True)
 
 class Users(Resource):
     def get(self):
         return {'message': 'user 1'}
+
 
 class User(Resource):
     def post(self):
