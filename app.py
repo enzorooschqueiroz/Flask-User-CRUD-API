@@ -1,18 +1,22 @@
-from flask import Flask
+from flask import Flask, jsonify
 from flask_restful import Resource, Api
 from flask_mongoengine import MongoEngine
 
 app = Flask(__name__)
+
+app.config['MONGODB_SETTINGS'] = {
+    "db": "users",
+    "host": "mongodb",  # Use 'mongodb' as the hostname, not 'localhost'
+    "port": 27017,
+    "username": "admin",
+    "password": "admin",
+    "authentication_source": "admin"
+}
+
+
 api = Api(app)
 db = MongoEngine(app)
 
-app.config['MONGODB_SETTING'] = {
-    "db": "users",
-    "host": "mongodb",
-    "port": 27017,
-    "user": "admin",
-    "password": "admin"  # Inserir credenciais do MongoDB aqui
-}
 
 class UserModel(db.Document):
     cpf = db.StringField(required=True, unique=True)
@@ -23,7 +27,7 @@ class UserModel(db.Document):
 
 class Users(Resource):
     def get(self):
-        return {'message': 'user 1'}
+        return jsonify(UserModel.objects())
 
 
 class User(Resource):
