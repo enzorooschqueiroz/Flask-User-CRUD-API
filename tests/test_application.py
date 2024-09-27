@@ -12,22 +12,23 @@ class TestApplication():
     
     @pytest.fixture
     def valid_user(self):
-        return {
-            "cpf": "858.853.850-41",
-            "email": "user@example.com",
-            "first_name": "Gabriel Boiola",
+        return{
+            "first_name": "Jonh",
             "last_name": "Doe",
-            "birth_date": "1990-01-01"
-        }
+            "birth_date": "1990-01-01",
+            "cpf": "858.853.850-41",
+            "email": "user@example.com"
+            }
+            
     
     @pytest.fixture
     def invalid_user(self):
         return {
-            "cpf": "858.853.850-42",
-            "email": "user@example.com",
-            "first_name": "Gabriel Boiola",
+            "first_name": "Gabriel",
             "last_name": "Doe",
-            "birth_date": "1990-01-01"
+            "birth_date": "1990-01-01",
+            "cpf": "858.853.850-42",
+            "email": "user@example.com"
         }
 
     def test_get_users(self, client):
@@ -42,3 +43,31 @@ class TestApplication():
         response = client.post('/user', json=invalid_user)
         assert response.status_code == 400 
         assert b"Invalid" in response.data
+
+    def test_get_user(self, client, valid_user, invalid_user):
+        response = client.get('/user/%s' % valid_user["cpf"])
+
+
+        # Check status code
+        assert response.status_code == 200
+
+        # Access the response as a dictionary
+        user_data = response.json
+        assert user_data["first_name"] == "Jonh"
+        assert user_data["last_name"] == "Doe"
+        birth_date = user_data["birth_date"]["$date"]
+        assert birth_date == "1990-01-01T00:00:00Z"
+        assert user_data["cpf"] == "858.853.850-41"
+        assert user_data["email"] == "user@example.com"
+
+        
+        response = client.get('/user/%s' % invalid_user["cpf"])
+
+
+        # Check status code
+        assert response.status_code == 404
+
+        #Check error message
+        assert b"User not found" in response.data
+       
+            
