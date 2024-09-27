@@ -5,10 +5,11 @@ from .app import User, Users
 
 def create_app(config):
     app = Flask(__name__)
-    api = Api(app)
     app.config.from_object(config)
+    api = Api(app)
     _init_db(app)
 
-    # Definindo endpoints
-    api.add_resource(Users, '/users', endpoint='users_list')
-    api.add_resource(User, '/user', '/user/<string:cpf>', endpoint='user_detail')
+    api.add_resource(Users, '/users')
+    api.add_resource(User, '/user', '/user/<string:cpf>')
+
+    return app
