@@ -8,8 +8,8 @@ COPY requirements.txt .
 
 RUN pip install -r requirements.txt
 
-COPY app.py .
+COPY wsgi.py .
+COPY config.py .
+COPY application application
 
-ENV FLASK_ENV=development
-
-CMD ["flask", "run", "--host=0.0.0.0"]
+CMD [ "python", "wsgi.py" ]
