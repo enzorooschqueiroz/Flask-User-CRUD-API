@@ -1,4 +1,7 @@
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 class DevConfig:
@@ -13,7 +16,7 @@ class DevConfig:
 class ProdConfig:
     
     MONGODB_SETTINGS = {
-        'host': 'mongodb+srv://admin:mJSMWoEYU4DDxAE@manageusers.sxnyu.mongodb.net/users?retryWrites=true&w=majority&appName=ManageUsers'
+        'host': os.getenv('MONGODB_KEY')
     }
 
 
