@@ -10,6 +10,12 @@ class DevConfig:
         'password': os.getenv('MONGODB_PASSWORD')
     }
 
+class ProdConfig:
+    
+    MONGODB_SETTINGS = {
+        'host': 'mongodb+srv://admin:mJSMWoEYU4DDxAE@manageusers.sxnyu.mongodb.net/users?retryWrites=true&w=majority&appName=ManageUsers'
+    }
+
 
 class MockConfig:
     
@@ -17,3 +23,4 @@ class MockConfig:
         'db': 'users',
         'host': 'mongomock://localhost'
     }
+
