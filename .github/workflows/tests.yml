@@ -46,7 +46,7 @@ jobs:
         run: npm i -g @railway/cli
 
       - name: Deploy
-        run: railway up --service 8892212d-1b37-43e8-89f6-c9ef0b457def
+        run: railway up --service RestAPI---Flask
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
