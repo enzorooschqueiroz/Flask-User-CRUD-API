@@ -1,48 +1,48 @@
 # Flask User CRUD API
 
-Este é um projeto básico de uma API RESTful construída com Flask para gerenciar usuários, focada em aprendizagem de Docker, testes unitários, CI/CD, e deploy.
+This is a basic project for a RESTful API built with Flask to manage users, focusing on learning Docker, unit tests, CI/CD, and deployment.
 
-## Arquitetura
+## Architecture
 
-A aplicação segue a estrutura de CRUD (Create, Read, Update, Delete) para gerenciar usuários. A API utiliza MongoDB via `mongoengine` como banco de dados.
+The application follows the CRUD (Create, Read, Update, Delete) structure to manage users. The API uses MongoDB via `mongoengine` as the database.
 
-### Funcionalidades Implementadas
+### Implemented Features
 
-1. **GET /users** - Retorna a lista de todos os usuários cadastrados.
-2. **GET /user/<cpf>** - Retorna os detalhes de um usuário específico pelo CPF.
-3. **POST /user** - Cria um novo usuário com as informações fornecidas (CPF, email, nome, sobrenome e data de nascimento). A criação do usuário valida o CPF utilizando um algoritmo de verificação.
+1. **GET /users** - Returns the list of all registered users.
+2. **GET /user/<cpf>** - Returns the details of a specific user by CPF.
+3. **POST /user** - Creates a new user with the provided information (CPF, email, first name, last name, and birth date). User creation validates the CPF using a verification algorithm.
 
-### Validações Implementadas
+### Implemented Validations
 
-- **CPF**: A API valida a formatação e a autenticidade do CPF fornecido.
-  - O CPF deve seguir o formato `xxx.xxx.xxx-xx`.
-  - A verificação segue os dígitos verificadores padrão do CPF.
-- **Email**: Campo obrigatório.
-- **Nome e Sobrenome**: Campos obrigatórios.
-- **Data de Nascimento**: Campo obrigatório.
+- **CPF**: The API validates the format and authenticity of the provided CPF.
+  - The CPF must follow the format `xxx.xxx.xxx-xx`.
+  - The verification follows the standard CPF check digits.
+- **Email**: Required field.
+- **First Name and Last Name**: Required fields.
+- **Birth Date**: Required field.
 
-### Exemplo de Uso
+### Example Usage
 
-#### Criação de Usuário (POST)
+#### User Creation (POST)
 
 ```json
 POST /user
 {
   "cpf": "123.456.789-09",
-  "email": "exemplo@dominio.com",
-  "first_name": "Nome",
-  "last_name": "Sobrenome",
+  "email": "example@domain.com",
+  "first_name": "FirstName",
+  "last_name": "LastName",
   "birth_date": "1990-01-01"
 }
 ```
 
-#### Consulta de Todos os Usuários (GET)
+#### Retrieve All Users (GET)
 
 ```
 GET /users
 ```
 
-#### Consulta de Usuário por CPF (GET)
+#### Retrieve User by CPF (GET)
 
 ```
 GET /user/123.456.789-09
@@ -50,146 +50,146 @@ GET /user/123.456.789-09
 
 ---
 
-## Modelos de Dados
+## Data Models
 
-A API utiliza o MongoDB para persistir os dados dos usuários, e o modelo de dados é definido utilizando `mongoengine`.
+The API uses MongoDB to persist user data, and the data model is defined using `mongoengine`.
 
-### Modelo de Usuário (UserModel)
+### User Model (UserModel)
 
-Abaixo estão os campos do modelo `UserModel`, que representa um usuário na aplicação:
+Below are the fields for the `UserModel`, representing a user in the application:
 
-- **cpf**: `StringField` (Obrigatório, Único) — CPF do usuário, deve ser único e válido.
-- **email**: `EmailField` (Obrigatório) — Endereço de email do usuário.
-- **first_name**: `StringField` (Obrigatório, Máximo: 50 caracteres) — Primeiro nome do usuário.
-- **last_name**: `StringField` (Obrigatório, Máximo: 50 caracteres) — Sobrenome do usuário.
-- **birth_date**: `DateTimeField` (Obrigatório) — Data de nascimento do usuário.
+- **cpf**: `StringField` (Required, Unique) — User's CPF, must be unique and valid.
+- **email**: `EmailField` (Required) — User's email address.
+- **first_name**: `StringField` (Required, Max: 50 characters) — User's first name.
+- **last_name**: `StringField` (Required, Max: 50 characters) — User's last name.
+- **birth_date**: `DateTimeField` (Required) — User's birth date.
 
 ---
 
-Exemplo de um objeto JSON de usuário:
+Example of a user JSON object:
 
 ```json
 {
   "cpf": "123.456.789-09",
-  "email": "exemplo@dominio.com",
-  "first_name": "Nome",
-  "last_name": "Sobrenome",
+  "email": "example@domain.com",
+  "first_name": "FirstName",
+  "last_name": "LastName",
   "birth_date": "1990-01-01T00:00:00"
 }
 ```
 
 ---
 
-## Testes Unitários
+## Unit Tests
 
-O projeto inclui testes unitários para verificar o comportamento da API e garantir que todas as operações do CRUD funcionem corretamente. Os testes são implementados utilizando `pytest`.
+The project includes unit tests to verify the API's behavior and ensure that all CRUD operations work correctly. The tests are implemented using `pytest`.
 
-### Configuração dos Testes
+### Test Configuration
 
-Os testes utilizam um cliente de teste fornecido pelo Flask, permitindo que as rotas sejam testadas sem a necessidade de rodar o servidor real.
+The tests use a test client provided by Flask, allowing routes to be tested without running the actual server.
 
 #### Fixtures
 
-- **client**: Cria um cliente de teste com a configuração da aplicação.
-- **valid_user**: Fornece um dicionário de dados de um usuário válido para os testes de criação de usuários.
-- **invalid_user**: Fornece um dicionário de dados de um usuário inválido para testar os cenários de erro.
+- **client**: Creates a test client with the application's configuration.
+- **valid_user**: Provides a dictionary of valid user data for user creation tests.
+- **invalid_user**: Provides a dictionary of invalid user data to test error scenarios.
 
-### Testes Implementados
+### Implemented Tests
 
-1. **Teste de Busca de Todos os Usuários** (`test_get_users`)
-   - **Método**: `GET /users`
-   - **Verifica**: Se a resposta retorna status 200 (OK).
+1. **Test Retrieve All Users** (`test_get_users`)
+   - **Method**: `GET /users`
+   - **Verifies**: The response returns status 200 (OK).
 
-2. **Teste de Criação de Usuário** (`test_post_user`)
-   - **Método**: `POST /user`
-   - **Verifica**:
-     - Se um usuário válido é criado com sucesso (status 200).
-     - Se a criação de um usuário inválido retorna status 400 e uma mensagem de erro.
+2. **Test User Creation** (`test_post_user`)
+   - **Method**: `POST /user`
+   - **Verifies**:
+     - A valid user is successfully created (status 200).
+     - The creation of an invalid user returns status 400 and an error message.
 
-3. **Teste de Busca de Usuário por CPF** (`test_get_user`)
-   - **Método**: `GET /user/<cpf>`
-   - **Verifica**:
-     - Se um usuário válido é retornado com as informações corretas.
-     - Se a tentativa de buscar um usuário inválido retorna status 404 e uma mensagem "User not found".
+3. **Test Retrieve User by CPF** (`test_get_user`)
+   - **Method**: `GET /user/<cpf>`
+   - **Verifies**:
+     - A valid user is returned with correct information.
+     - An attempt to retrieve an invalid user returns status 404 and the message "User not found."
 
-### Como Rodar os Testes
+### How to Run the Tests
 
-1. **Instale as dependências**:
-   - Certifique-se de que todas as dependências do projeto estão instaladas, incluindo `pytest`.
+1. **Install the dependencies**:
+   - Ensure that all project dependencies, including `pytest`, are installed.
 
-2. **Execute os testes**:
-   - Para rodar os testes, execute o seguinte comando no terminal:
+2. **Run the tests**:
+   - To run the tests, execute the following command in the terminal:
      ```bash
      pytest
      ```
 
 ---
 
-## Docker e Docker Compose
+## Docker and Docker Compose
 
-Este projeto é containerizado usando Docker, e o ambiente é configurado utilizando `docker-compose` para facilitar o desenvolvimento e deploy da aplicação. 
+This project is containerized using Docker, and the environment is configured using `docker-compose` to facilitate development and deployment.
 
 - **MongoDB Service**:
-  - Utiliza a imagem `mongo:5.0.8`.
-  - Define as variáveis de ambiente para o nome de usuário e senha do MongoDB.
-  - Reinicia automaticamente caso o serviço falhe.
+  - Uses the `mongo:5.0.8` image.
+  - Defines environment variables for MongoDB username and password.
+  - Automatically restarts if the service fails.
   
 - **API Service**:
-  - Faz o build da API Flask utilizando o `Dockerfile`.
-  - Mapeia a porta `5000` do container para a porta `5000` no host.
-  - Define as variáveis de ambiente para conectar ao MongoDB.
-  - Depende do serviço de MongoDB, garantindo que o banco de dados seja iniciado antes da API.
-  - Monta o diretório `./application` como volume no container para que as mudanças no código local reflitam dentro do container.
+  - Builds the Flask API using the `Dockerfile`.
+  - Maps container port `5000` to host port `5000`.
+  - Defines environment variables to connect to MongoDB.
+  - Depends on the MongoDB service, ensuring that the database is started before the API.
+  - Mounts the `./application` directory as a volume in the container so that local code changes reflect inside the container.
 
-### Como Rodar a Aplicação com Docker
+### How to Run the Application with Docker
 
-1. **Construa a Imagem e Inicie os Containers**:
-   - No diretório raiz do projeto, execute o seguinte comando para construir a imagem e rodar os containers:
+1. **Build the Image and Start the Containers**:
+   - In the root directory of the project, run the following command to build the image and run the containers:
      ```bash
      docker-compose up --build
      ```
 
-2. **Acessar a Aplicação**:
-   - A API estará disponível em `http://localhost:5000`.
+2. **Access the Application**:
+   - The API will be available at `http://localhost:5000`.
 
-3. **Parar os Containers**:
-   - Para parar e remover os containers, execute:
+3. **Stop the Containers**:
+   - To stop and remove the containers, run:
      ```bash
      docker-compose down
      ```
 
 ---
 
-## CI/CD com GitHub Actions
+## CI/CD with GitHub Actions
 
-Este projeto utiliza GitHub Actions para automatizar o processo de teste e deploy da aplicação sempre que há um push para a branch `main`.
+This project uses GitHub Actions to automate the process of testing and deploying the application whenever there is a push to the `main` branch.
 
-### Arquivo de Workflow
+### Workflow File
 
-O arquivo de workflow `test.yml` define dois jobs principais: `test` e `deploy`.
+The workflow file `test.yml` defines two main jobs: `test` and `deploy`.
 
-### Explicação dos Jobs
+### Explanation of the Jobs
 
-- **Job de Testes (`test`)**:
-  - Este job é executado sempre que um push é feito na branch `main`.
-  - Utiliza o Python 3.9 para rodar os testes unitários.
-  - Após a instalação das dependências via `pip`, o comando `make test` é executado para rodar os testes unitários.
+- **Test Job (`test`)**:
+  - This job runs whenever a push is made to the `main` branch.
+  - Uses Python 3.9 to run unit tests.
+  - After installing dependencies via `pip`, the `make test` command is executed to run the unit tests.
 
-- **Job de Deploy (`deploy`)**:
-  - O deploy só será executado se os testes passarem (`needs: test`).
-  - Usa Node.js versão 16 para configurar o ambiente.
-  - Instala as dependências do projeto com `yarn`.
-  - Instala a CLI do Railway para o deploy.
-  - Realiza o deploy da aplicação para o serviço `Railway` usando o comando `railway up`, com o token e a URL do banco de dados passados como variáveis de ambiente via `secrets`.
+- **Deploy Job (`deploy`)**:
+  - The deploy is only executed if the tests pass (`needs: test`).
+  - Uses Node.js version 16 to set up the environment.
+  - Installs project dependencies with `yarn`.
+  - Installs the Railway CLI for deployment.
+  - Deploys the application to the `Railway` service using the command `railway up`, with the token and database URL passed as environment variables via `secrets`.
 
-### Como Configurar o CI/CD
+### How to Configure CI/CD
 
-1. **Criar Secrets no GitHub**:
-   - Para configurar o deploy automático no GitHub, você precisa adicionar os secrets `RAILWAY_TOKEN` e `DATABASE_URL` no repositório:
-     - No repositório GitHub, vá até *Settings* > *Secrets* > *Actions* e adicione os secrets.
+1. **Create Secrets in GitHub**:
+   - To configure automatic deployment in GitHub, you need to add the `RAILWAY_TOKEN` and `DATABASE_URL` secrets to the repository:
+     - In the GitHub repository, go to *Settings* > *Secrets* > *Actions* and add the secrets.
 
-2. **Executar Manualmente**:
-   - Além do deploy automático em pushes para a branch `main`, você também pode iniciar o workflow manualmente via a interface do GitHub Actions clicando em "Run workflow" em *Actions*.
+2. **Manual Execution**:
+   - Besides automatic deployment on pushes to the `main` branch, you can also manually start the workflow via the GitHub Actions interface by clicking "Run workflow" under *Actions*.
 
-3. **Deploy Automático**:
-   - Sempre que você fizer um push para a branch `main`, os testes serão executados automaticamente e, caso passem, o deploy será realizado no Railway.
+3. **Automatic Deployment**:
+   - Whenever you push to the `main` branch, the tests will automatically run, and if they pass, the deployment will be performed on Railway.
