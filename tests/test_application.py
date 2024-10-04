@@ -47,11 +47,8 @@ class TestApplication():
     def test_get_user(self, client, valid_user, invalid_user):
         response = client.get('/user/%s' % valid_user["cpf"])
 
-
-        # Check status code
         assert response.status_code == 200
 
-        # Access the response as a dictionary
         user_data = response.json
         assert user_data["first_name"] == "Jonh"
         assert user_data["last_name"] == "Doe"
@@ -60,14 +57,18 @@ class TestApplication():
         assert user_data["cpf"] == "858.853.850-41"
         assert user_data["email"] == "user@example.com"
 
-        
+
         response = client.get('/user/%s' % invalid_user["cpf"])
-
-
-        # Check status code
         assert response.status_code == 404
-
-        #Check error message
         assert b"User not found" in response.data
-       
+    
+    def test_delete_user(self, client, valid_user, invalid_user):
+        
+        response = client.delete('/user/%s' % valid_user["cpf"])
+        assert response.status_code == 200
+        assert b"User deleted succesfully" in response.data
+
+        response = client.delete('/user/%s' % invalid_user["cpf"])
+        assert response.status_code == 404
+        assert b"User not found" in response.data
             
