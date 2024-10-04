@@ -71,7 +71,7 @@ class User(Resource):
 
         try:
             response = UserModel(**data).save()      
-            return {"message": "User %s created successfully!" %response.id}
+            return {"message": "User %s created successfully!"}, 201
         except NotUniqueError:
             return {"message": "CPF already registered"}, 400
 
