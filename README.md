@@ -48,6 +48,24 @@ GET /users
 GET /user/123.456.789-09
 ```
 
+### Delete User by CPF (DELETE)
+
+```
+DELETE /user/123.456.789-09
+```
+
+###  Update User by CPF (PUT)
+
+```json
+PUT /user/123.456.789-09
+{
+  "cpf": "123.456.789-09",
+  "email": "updated@domain.com",
+  "first_name": "UpdatedFirstName",
+  "last_name": "UpdatedLastName",
+  "birth_date": "1990-01-01"
+}
+```
 ---
 
 ## Data Models
