@@ -82,6 +82,15 @@ class User(Resource):
             return jsonify(user)
         
         return {"message": "User not found"}, 404
+    
+    def delete(self, cpf):
+        user = UserModel.objects(cpf=cpf).first()
+
+        if user:
+            user.delete()
+            return {"message": "User deleted succesfully"}, 200
+        
+        return {"message": "User not found"}, 404
 
 
 
