@@ -71,7 +71,7 @@ class User(Resource):
 
         try:
             response = UserModel(**data).save()      
-            return {"message": "User %s created successfully!" %response.id}
+            return {"message": "User %s created successfully!"}, 201
         except NotUniqueError:
             return {"message": "CPF already registered"}, 400
 
@@ -92,6 +92,22 @@ class User(Resource):
         
         return {"message": "User not found"}, 404
 
+    def put(self, cpf):
+        data = _user_parser.parse_args()
 
+        # Validação do CPF
+        if not User.validate_cpf(data['cpf']):  # Chama validate_cpf da classe User
+            return {"message": "Invalid CPF"}, 400
+
+        user = UserModel.objects(cpf=cpf).first()
+
+        if user:
+            try:
+                user.update(**data)    
+                return {"message": "User updated successfully!"}
+            except NotUniqueError:
+                return {"message": "CPF already registered"}, 400
+        else:
+            return {"message": "User not found"}, 404
 
 
