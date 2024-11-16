@@ -23,10 +23,25 @@ jobs:
       - name: run tests
         run:
           make test
+  
+  check_deploy_date:
+    runs-on: ubuntu-latest
+    steps:
+      - name: code checkout
+        uses: actions/checkout@v3
+
+      - name: set-up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.9'
+
+      - name: Verify deploy date
+        run: |
+          python check_deploy_date.py
 
   deploy:
 
-    needs : test
+    needs : check_deploy_date
 
     runs-on: ubuntu-latest
 
