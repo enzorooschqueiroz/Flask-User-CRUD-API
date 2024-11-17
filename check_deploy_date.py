@@ -25,13 +25,14 @@ def is_friday(date):
     return today.weekday() == 4
 
 if __name__ == "__main__":
-    if is_holiday():
+    today = datetime.now()
+    if is_holiday(today):
         print("Deploy Blocked, Today is a holiday.")
         exit(1)
-    elif is_weekend():
+    elif is_weekend(today):
         print("Deploy Blocked, Today is a weekend.")
         exit(1)
-    elif is_friday():
+    elif is_friday(today):
         print("Deploy Blocked, Today is Friday.")
         exit(1)
     else:
