@@ -1,6 +1,7 @@
 APP = restapi
 
 test:
+	@black .
 	@pytest -v --disable-warnings
 
 compose:
