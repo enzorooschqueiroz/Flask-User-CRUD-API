@@ -6,47 +6,44 @@ import re
 
 
 _user_parser = reqparse.RequestParser()
-_user_parser.add_argument('cpf',
-                          type=str,
-                          required=True,
-                          help="CPF of the user cannot be blank")
-_user_parser.add_argument('email',
-                          type=str,
-                          required=True,
-                          help="Email of the user cannot be blank")
-_user_parser.add_argument('first_name',
-                          type=str,
-                          required=True,
-                          help="First name of the user cannot be blank")
-_user_parser.add_argument('last_name',
-                          type=str,
-                          required=True,
-                          help="Last name of the user cannot be blank")
-_user_parser.add_argument('birth_date',
-                          type=str,
-                          required=True,
-                          help="Birthdate of the user cannot be blank")
+_user_parser.add_argument(
+    "cpf", type=str, required=True, help="CPF of the user cannot be blank"
+)
+_user_parser.add_argument(
+    "email", type=str, required=True, help="Email of the user cannot be blank"
+)
+_user_parser.add_argument(
+    "first_name", type=str, required=True, help="First name of the user cannot be blank"
+)
+_user_parser.add_argument(
+    "last_name", type=str, required=True, help="Last name of the user cannot be blank"
+)
+_user_parser.add_argument(
+    "birth_date", type=str, required=True, help="Birthdate of the user cannot be blank"
+)
 
 
 class HealthCheck(Resource):
     def get(self):
         response = HealthCheckModel.objects(status="Healthy")
-        if response :
+        if response:
             return "Healthy", 200
         else:
             HealthCheckModel(status="Healthy").save()
-            return  "Healthy", 200
+            return "Healthy", 200
+
 
 class Users(Resource):
     def get(self):
         return jsonify(UserModel.objects())
+
 
 class User(Resource):
 
     @staticmethod
     def validate_cpf(cpf: str) -> bool:
         # Verifica a formatação do CPF
-        if not re.match(r'\d{3}\.\d{3}\.\d{3}-\d{2}', cpf):
+        if not re.match(r"\d{3}\.\d{3}\.\d{3}-\d{2}", cpf):
             return False
 
         # Obtém apenas os números do CPF, ignorando pontuações
@@ -74,12 +71,12 @@ class User(Resource):
         data = _user_parser.parse_args()
 
         # Validação do CPF
-        if not User.validate_cpf(data['cpf']):  # Chama validate_cpf da classe User
+        if not User.validate_cpf(data["cpf"]):  # Chama validate_cpf da classe User
             return {"message": "Invalid CPF"}, 400
 
         try:
-            response = UserModel(**data).save()      
-            return {"message": "User %s created successfully!" %response.id}, 201
+            response = UserModel(**data).save()
+            return {"message": "User %s created successfully!" % response.id}, 201
         except NotUniqueError:
             return {"message": "CPF already registered"}, 400
 
@@ -88,34 +85,32 @@ class User(Resource):
 
         if user:
             return jsonify(user)
-        
+
         return {"message": "User not found"}, 404
-    
+
     def delete(self, cpf):
         user = UserModel.objects(cpf=cpf).first()
 
         if user:
             user.delete()
             return {"message": "User deleted succesfully"}, 200
-        
+
         return {"message": "User not found"}, 404
 
     def put(self, cpf):
         data = _user_parser.parse_args()
 
         # Validação do CPF
-        if not User.validate_cpf(data['cpf']):  # Chama validate_cpf da classe User
+        if not User.validate_cpf(data["cpf"]):  # Chama validate_cpf da classe User
             return {"message": "Invalid CPF"}, 400
 
         user = UserModel.objects(cpf=cpf).first()
 
         if user:
             try:
-                user.update(**data)    
+                user.update(**data)
                 return {"message": "User updated successfully!"}
             except NotUniqueError:
                 return {"message": "CPF already registered"}, 400
         else:
             return {"message": "User not found"}, 404
-
-
